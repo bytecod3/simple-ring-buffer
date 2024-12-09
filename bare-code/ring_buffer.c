@@ -10,6 +10,7 @@
 void ring_buffer_init(ring_buffer* r) {
 	r->write_index = 0;
 	r->read_index = 0;
+	r->buffer_length = 0;
 }
 
 void ring_buffer_put(ring_buffer* r, int d) {
@@ -17,7 +18,14 @@ void ring_buffer_put(ring_buffer* r, int d) {
 		r->write_index = 0;
 	}
 	r->buffer[r->write_index++] = d;
-	r->buffer_length++;
+
+	// cap the buffer length
+	if(r->buffer_length >= SIZE_OF_BUFFER) {
+		r->buffer_length = SIZE_OF_BUFFER;
+	} else {
+		r->buffer_length++;
+	}
+	
 }
 
 int ring_buffer_get(ring_buffer* r) {
